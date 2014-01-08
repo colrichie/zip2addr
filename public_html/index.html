@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+
+<haed>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<style type="text/css">  
+<!-- 
+    dd { margin-bottom: 0.5em; } 
+    #addressform { width: 30em; margin: 1em 0; padding: 1em; border: 1px solid; } 
+-->  
+</style>  
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<script type="text/javascript" src="zip2addr.js"></script>
+<title>郵便番号→住所検索Ajax by シェルスクリプト デモ</title>
+</haed>
+
+
+<body>
+<h1>郵便番号→住所検索Ajax by シェルスクリプト デモ</h1>
+
+<p>Perl or PHP or Ruby? MySQL or PostgreSQL? prototype.js or jQuery?<br />これくらいのことで、そんなの要らないよ。</p>
+<p><strong>もっと、素のUNIXの力を活かそうぜ!</strong></p>
+
+<form action="#dummy">
+<div id="addressform"><dl>
+  <dt>郵便番号</dt><dd><input id="inqZipcode1" type="text" name="inqZipcode1" size="3" maxlength="3" />-<input id="inqZipcode2" type="text" name="inqZipcode2" size="4" maxlength="4" /></dd>
+  <dt>住所検索</dt><dd><input id="run" type="button" name="run" value="実行!" onclick="zip2addr();" /></dd>
+  <dt>住所(都道府県名)</dt><dd>
+                             <select id="inqPref" name="inqPref">
+                               <option>(選択してください)</option>
+                               <option>北海道</option>
+                               <option>青森県</option>
+                               <option>岩手県</option>
+                               <option>宮城県</option>
+                               <option>秋田県</option>
+                               <option>山形県</option>
+                               <option>福島県</option>
+                               <option>茨城県</option>
+                               <option>栃木県</option>
+                               <option>群馬県</option>
+                               <option>埼玉県</option>
+                               <option>千葉県</option>
+                               <option>東京都</option>
+                               <option>神奈川県</option>
+                               <option>新潟県</option>
+                               <option>富山県</option>
+                               <option>石川県</option>
+                               <option>福井県</option>
+                               <option>山梨県</option>
+                               <option>長野県</option>
+                               <option>岐阜県</option>
+                               <option>静岡県</option>
+                               <option>愛知県</option>
+                               <option>三重県</option>
+                               <option>滋賀県</option>
+                               <option>京都府</option>
+                               <option>大阪府</option>
+                               <option>兵庫県</option>
+                               <option>奈良県</option>
+                               <option>和歌山県</option>
+                               <option>鳥取県</option>
+                               <option>島根県</option>
+                               <option>岡山県</option>
+                               <option>広島県</option>
+                               <option>山口県</option>
+                               <option>徳島県</option>
+                               <option>香川県</option>
+                               <option>愛媛県</option>
+                               <option>高知県</option>
+                               <option>福岡県</option>
+                               <option>佐賀県</option>
+                               <option>長崎県</option>
+                               <option>熊本県</option>
+                               <option>大分県</option>
+                               <option>宮崎県</option>
+                               <option>鹿児島県</option>
+                               <option>沖縄県</option>
+                             </select>
+                           </dd>
+  <dt>住所(市区町村名)</dt><dd><input id="inqCity" type="text" size="20" name="inqCity" /></dd>
+  <dt>住所(町名)</dt><dd><input id="inqTown" type="text" size="20" name="inqTown" /></dd>
+</dl></div>
+</form>
+
+<a href="../">ソースコードを見てみる</a>
+
+</body>
+
+</html>
