@@ -122,7 +122,7 @@ else                                                              #
   error_exit 6 'No KANJI convertors found (iconv or nkf)'         #
 fi                                                                |
 # 日本郵便 郵便番号-住所 CSVデータ(UTF-8変換済)                   #
-$dir_MINE/../tools/parsrc.sh                                      | # CSVパーサー(自作コマンド)
+$dir_MINE/../commands/parsrc.sh                                   | # CSVパーサー(自作コマンド)
 # 1:行番号 2:列番号 3:CSVデータセルデータ                         #
 awk '$2~/^3|7|8|9$/'                                              |
 # 1:行番号 2:列番号(3=郵便番号,7=都道府県,8=市区町村,9=町) 3:データ

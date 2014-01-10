@@ -2,9 +2,9 @@
 
 ######################################################################
 #
-# ZIP2ADDR.AJAX.CGI
-# 郵便番号―住所検索
-# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/04
+# ZIP2ADDR_JSONAPI.AJAX.CGI
+# 郵便番号―住所検索(よそのJSON形式Web API利用バージョン)
+# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/10
 #
 # [入力]
 # ・[CGI変数]
@@ -24,7 +24,7 @@
 
 # --- 変数定義 -------------------------------------------------------
 dir_MINE="$(d=${0%/*}/; [ "_$d" = "_$0/" ] && d='./'; cd "$d"; pwd)" # このshのパス
-readonly file_ZIPDIC="$dir_MINE/../data/zipdic.txt"                  # 郵便番号辞書ファイルのパス
+readonly url_ZIPAPI='http://api.postalcode.jp/v1/zipsearch'          # 郵便番号辞書APIのURL(グルーブテクノロジー)
 
 # --- ファイルパス ---------------------------------------------------
 PATH='/usr/local/bin:/usr/bin:/bin'
@@ -56,9 +56,6 @@ __HTTP_HEADER
 # メイン
 ######################################################################
 
-# --- 郵便番号データファイルはあるか？ -------------------------------
-[ -f "$file_ZIPDIC" ] || error500_exit 'zipcode dictionary file not found'
-
 # --- CGI変数(GETメソッド)で指定された郵便番号を取得 -----------------
 zipcode=$(echo "_${QUERY_STRING:-}" | # 環境変数で渡ってきたCGI変数文字列をSTDOUTへ
           sed '1s/^_//'             | # echoの誤動作防止のために付けた"_"を除去
@@ -71,12 +68,16 @@ zipcode=$(echo "_${QUERY_STRING:-}" | # 環境変数で渡ってきたCGI変数�
 [ -n "$zipcode" ] || error400_exit 'invalid zipcode'
 
 # --- JSON形式文字列を生成して返す -----------------------------------
-cat "$file_ZIPDIC"                                                 | # 検索対象の辞書ファイルを開く
-#  1:郵便番号 2～:各種住所データ                                   #
-awk '$1=="'$zipcode'"{hit=1;print;exit} END{if(hit==0){print ""}}' | # 郵便番号の該当行を取り出す(1行のみ)
-sed 's/（.*//'                                                     | # 住所文字列で小括弧以降は使えないので除去する
-sed 's/以下に.*//'                                                 | # 「以下に」の場合も同様
-while read zip pref city town; do # HTTPヘッダーと共に、JSON文字列化した住所データを出力する
+curl -s "${url_ZIPAPI}?format=json&oe=UTF-8&zipcode=${zipcode}" | # Web APIから住所を検索し、結果をJSONで取得
+tr -d '\r'                                                      | # CR+LFをLFに変換
+$dir_MINE/../commands/parsrj.sh                                 | # JSONを絶対JSONPath形式に正規化(自作プログラム)
+awk '$1~/\.zipcode$/    {z = $2;}                               # # JSON中の郵便番号データを抽出
+     $1~/\.prefecture$/ {p = $2;}                               # # JSON中の都道府県名データを抽出
+     $1~/\.city$/       {c = $2;}                               # # JSON中の市区町村名データを抽出
+     $1~/\.town$/       {t = $2;}                               # # JSON中の町名データを抽出
+     END                {print z,p,c,t;}'                       | # 次コマンドに出力
+awk '{print (NF==4) ? $0 : "";}'                                | # 住所が見つからなければ空行を出力する
+while read zip pref city town; do                                 # HTTPヘッダーと共に、JSON文字列化した住所データを出力する
   cat <<-__HTTP_RESPONSE
 	Content-Type: application/json; charset=utf-8
 	Cache-Control: private, no-store, no-cache, must-revalidate

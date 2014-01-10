@@ -6,8 +6,10 @@
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <style type="text/css">  
 <!-- 
-    dd { margin-bottom: 0.5em; } 
-    #addressform { width: 30em; margin: 1em 0; padding: 1em; border: 1px solid; } 
+    dd { margin-bottom: 0.5em; }
+    #addressform { width: 50em; margin: 1em 0; padding: 1em; border: 1px solid; }
+    #inqZipcode1,#inqZipcode2 {font-size: large; font-weight: bold;}
+    .type_desc {font-size: small; font-weight: bold;}
 -->  
 </style>  
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
@@ -23,67 +25,201 @@
 <p><strong>もっと、素のUNIXの力を活かそうぜ!</strong></p>
 
 <form action="#dummy">
-<div id="addressform"><dl>
-  <dt>郵便番号</dt><dd><input id="inqZipcode1" type="text" name="inqZipcode1" size="3" maxlength="3" />-<input id="inqZipcode2" type="text" name="inqZipcode2" size="4" maxlength="4" /></dd>
-  <dt>住所検索</dt><dd><input id="run" type="button" name="run" value="実行!" onclick="zip2addr();" /></dd>
-  <dt>住所(都道府県名)</dt><dd>
-                             <select id="inqPref" name="inqPref">
-                               <option>(選択してください)</option>
-                               <option>北海道</option>
-                               <option>青森県</option>
-                               <option>岩手県</option>
-                               <option>宮城県</option>
-                               <option>秋田県</option>
-                               <option>山形県</option>
-                               <option>福島県</option>
-                               <option>茨城県</option>
-                               <option>栃木県</option>
-                               <option>群馬県</option>
-                               <option>埼玉県</option>
-                               <option>千葉県</option>
-                               <option>東京都</option>
-                               <option>神奈川県</option>
-                               <option>新潟県</option>
-                               <option>富山県</option>
-                               <option>石川県</option>
-                               <option>福井県</option>
-                               <option>山梨県</option>
-                               <option>長野県</option>
-                               <option>岐阜県</option>
-                               <option>静岡県</option>
-                               <option>愛知県</option>
-                               <option>三重県</option>
-                               <option>滋賀県</option>
-                               <option>京都府</option>
-                               <option>大阪府</option>
-                               <option>兵庫県</option>
-                               <option>奈良県</option>
-                               <option>和歌山県</option>
-                               <option>鳥取県</option>
-                               <option>島根県</option>
-                               <option>岡山県</option>
-                               <option>広島県</option>
-                               <option>山口県</option>
-                               <option>徳島県</option>
-                               <option>香川県</option>
-                               <option>愛媛県</option>
-                               <option>高知県</option>
-                               <option>福岡県</option>
-                               <option>佐賀県</option>
-                               <option>長崎県</option>
-                               <option>熊本県</option>
-                               <option>大分県</option>
-                               <option>宮崎県</option>
-                               <option>鹿児島県</option>
-                               <option>沖縄県</option>
-                             </select>
-                           </dd>
-  <dt>住所(市区町村名)</dt><dd><input id="inqCity" type="text" size="20" name="inqCity" /></dd>
-  <dt>住所(町名)</dt><dd><input id="inqTown" type="text" size="20" name="inqTown" /></dd>
-</dl></div>
+
+<table border="0"  id="addressform">
+  <tr>
+    <td colspan="3">
+      <dl>
+        <dt>郵便番号</dt>
+        <dd><input id="inqZipcode1" type="text" name="inqZipcode1" size="3" maxlength="3" />-<input id="inqZipcode2" type="text" name="inqZipcode2" size="4" maxlength="4" /></dd>
+      </dl>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <dl>
+        <dt>住所検索<br /><span class="type_desc">(自前の辞書で)</span></dt><dd><input id="run" type="button" name="run" value="実行!" onclick="zip2addr();" /></dd>
+        <dt>住所(都道府県名)</dt><dd>
+                                   <select id="inqPref" name="inqPref">
+                                     <option>(選択してください)</option>
+                                     <option>北海道</option>
+                                     <option>青森県</option>
+                                     <option>岩手県</option>
+                                     <option>宮城県</option>
+                                     <option>秋田県</option>
+                                     <option>山形県</option>
+                                     <option>福島県</option>
+                                     <option>茨城県</option>
+                                     <option>栃木県</option>
+                                     <option>群馬県</option>
+                                     <option>埼玉県</option>
+                                     <option>千葉県</option>
+                                     <option>東京都</option>
+                                     <option>神奈川県</option>
+                                     <option>新潟県</option>
+                                     <option>富山県</option>
+                                     <option>石川県</option>
+                                     <option>福井県</option>
+                                     <option>山梨県</option>
+                                     <option>長野県</option>
+                                     <option>岐阜県</option>
+                                     <option>静岡県</option>
+                                     <option>愛知県</option>
+                                     <option>三重県</option>
+                                     <option>滋賀県</option>
+                                     <option>京都府</option>
+                                     <option>大阪府</option>
+                                     <option>兵庫県</option>
+                                     <option>奈良県</option>
+                                     <option>和歌山県</option>
+                                     <option>鳥取県</option>
+                                     <option>島根県</option>
+                                     <option>岡山県</option>
+                                     <option>広島県</option>
+                                     <option>山口県</option>
+                                     <option>徳島県</option>
+                                     <option>香川県</option>
+                                     <option>愛媛県</option>
+                                     <option>高知県</option>
+                                     <option>福岡県</option>
+                                     <option>佐賀県</option>
+                                     <option>長崎県</option>
+                                     <option>熊本県</option>
+                                     <option>大分県</option>
+                                     <option>宮崎県</option>
+                                     <option>鹿児島県</option>
+                                     <option>沖縄県</option>
+                                   </select>
+                                 </dd>
+        <dt>住所(市区町村名)</dt><dd><input id="inqCity" type="text" size="20" name="inqCity" /></dd>
+        <dt>住所(町名)</dt><dd><input id="inqTown" type="text" size="20" name="inqTown" /></dd>
+      </dl>
+    </td>
+    <td>
+      <dl>
+        <dt>住所検索<br /><span class="type_desc">(<a href="http://groovetechnology.jp/webservice/zipsearch/index.html" target="_blank">よそのXML形式WebAPI</a>をshで叩いて)</span></dt><dd><input id="run" type="button" name="run" value="実行!" onclick="zip2addr('API_XML');" /></dd>
+        <dt>住所(都道府県名)</dt><dd>
+                                   <select id="inqPref_API_XML" name="inqPref_API_XML">
+                                     <option>(選択してください)</option>
+                                     <option>北海道</option>
+                                     <option>青森県</option>
+                                     <option>岩手県</option>
+                                     <option>宮城県</option>
+                                     <option>秋田県</option>
+                                     <option>山形県</option>
+                                     <option>福島県</option>
+                                     <option>茨城県</option>
+                                     <option>栃木県</option>
+                                     <option>群馬県</option>
+                                     <option>埼玉県</option>
+                                     <option>千葉県</option>
+                                     <option>東京都</option>
+                                     <option>神奈川県</option>
+                                     <option>新潟県</option>
+                                     <option>富山県</option>
+                                     <option>石川県</option>
+                                     <option>福井県</option>
+                                     <option>山梨県</option>
+                                     <option>長野県</option>
+                                     <option>岐阜県</option>
+                                     <option>静岡県</option>
+                                     <option>愛知県</option>
+                                     <option>三重県</option>
+                                     <option>滋賀県</option>
+                                     <option>京都府</option>
+                                     <option>大阪府</option>
+                                     <option>兵庫県</option>
+                                     <option>奈良県</option>
+                                     <option>和歌山県</option>
+                                     <option>鳥取県</option>
+                                     <option>島根県</option>
+                                     <option>岡山県</option>
+                                     <option>広島県</option>
+                                     <option>山口県</option>
+                                     <option>徳島県</option>
+                                     <option>香川県</option>
+                                     <option>愛媛県</option>
+                                     <option>高知県</option>
+                                     <option>福岡県</option>
+                                     <option>佐賀県</option>
+                                     <option>長崎県</option>
+                                     <option>熊本県</option>
+                                     <option>大分県</option>
+                                     <option>宮崎県</option>
+                                     <option>鹿児島県</option>
+                                     <option>沖縄県</option>
+                                   </select>
+                                 </dd>
+        <dt>住所(市区町村名)</dt><dd><input id="inqCity_API_XML" type="text" size="20" name="inqCity_API_XML" /></dd>
+        <dt>住所(町名)</dt><dd><input id="inqTown_API_XML" type="text" size="20" name="inqTown_API_XML" /></dd>
+      </dl>
+    </td>
+    <td>
+      <dl>
+        <dt>住所検索<br /><span class="type_desc">(<a href="http://groovetechnology.jp/webservice/zipsearch/index.html" target="_blank">よそのJSON形式WebAPI</a>をshで叩いて)</span></dt><dd><input id="run" type="button" name="run" value="実行!" onclick="zip2addr('API_JSON');" /></dd>
+        <dt>住所(都道府県名)</dt><dd>
+                                   <select id="inqPref_API_JSON" name="inqPref_API_JSON">
+                                     <option>(選択してください)</option>
+                                     <option>北海道</option>
+                                     <option>青森県</option>
+                                     <option>岩手県</option>
+                                     <option>宮城県</option>
+                                     <option>秋田県</option>
+                                     <option>山形県</option>
+                                     <option>福島県</option>
+                                     <option>茨城県</option>
+                                     <option>栃木県</option>
+                                     <option>群馬県</option>
+                                     <option>埼玉県</option>
+                                     <option>千葉県</option>
+                                     <option>東京都</option>
+                                     <option>神奈川県</option>
+                                     <option>新潟県</option>
+                                     <option>富山県</option>
+                                     <option>石川県</option>
+                                     <option>福井県</option>
+                                     <option>山梨県</option>
+                                     <option>長野県</option>
+                                     <option>岐阜県</option>
+                                     <option>静岡県</option>
+                                     <option>愛知県</option>
+                                     <option>三重県</option>
+                                     <option>滋賀県</option>
+                                     <option>京都府</option>
+                                     <option>大阪府</option>
+                                     <option>兵庫県</option>
+                                     <option>奈良県</option>
+                                     <option>和歌山県</option>
+                                     <option>鳥取県</option>
+                                     <option>島根県</option>
+                                     <option>岡山県</option>
+                                     <option>広島県</option>
+                                     <option>山口県</option>
+                                     <option>徳島県</option>
+                                     <option>香川県</option>
+                                     <option>愛媛県</option>
+                                     <option>高知県</option>
+                                     <option>福岡県</option>
+                                     <option>佐賀県</option>
+                                     <option>長崎県</option>
+                                     <option>熊本県</option>
+                                     <option>大分県</option>
+                                     <option>宮崎県</option>
+                                     <option>鹿児島県</option>
+                                     <option>沖縄県</option>
+                                   </select>
+                                 </dd>
+        <dt>住所(市区町村名)</dt><dd><input id="inqCity_API_JSON" type="text" size="20" name="inqCity_API_JSON" /></dd>
+        <dt>住所(町名)</dt><dd><input id="inqTown_API_JSON" type="text" size="20" name="inqTown_API_JSON" /></dd>
+      </dl>
+    </td>
+  </tr>
+</table>
+
 </form>
 
-<a href="../">ソースコードを見てみる</a>
+<a href="https://github.com/richmikan/zip2addr">ソースコードを見てみる</a>
 
 </body>
 

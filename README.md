@@ -51,12 +51,21 @@
 |   |
 |   |-- zip2addr.js ........ 郵便番号→住所 変換用クライアントサイドプログラム
 |   |
-|   `-- zip2addr.ajax.cgi .. 郵便番号→住所 変換用サーバーサイドプログラム
-|                            (もちろんシェルスクリプト)
+|   |-- zip2addr.ajax.cgi .. 郵便番号→住所 変換用サーバーサイドプログラム
+|   |                        (もちろんシェルスクリプト)
+|   |
+|   |-- zip2addr_xmlapi.ajax.cgi ... 郵便番号→住所 変換用サーバーサイドプログラム
+|   |                               (よそのXML形式APIを叩いて検索するバージョン)
+|   |
+|   `-- zip2addr_jsonapi.ajax.cgi .. 郵便番号→住所 変換用サーバーサイドプログラム
+|                                   (よそのJSON形式APIを叩いて検索するバージョン)
 |
 `-- tools .................. 自作ツール置き場
     |
-    `-- parsrc.sh .......... CSVを解析するためのコマンド"PARSeR-Csv"
-                             ちなみに姉妹品で、JSONやXML対応版もあるよ
-                             https://gist.github.com/richmikan/3251311
+    |-- parsrc.sh .......... CSVをシェルスクリプト向けに正規化するコマンド"PARSeR-Csv"
+    |
+    |-- parsrj.sh .......... JSONをシェルスクリプト向けに正規化するコマンド"PARSeR-Json"
+    |
+    `-- parsrx.sh .......... XMLをシェルスクリプト向けに正規化するコマンド"PARSeR-Xml"
+                             参考:https://gist.github.com/richmikan/3251311
 ```
