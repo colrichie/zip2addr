@@ -9,6 +9,11 @@
 * このプログラムは、他に curl コマンドと、漢字変換コマンド (iconv または nkf)を必要とします。
 * FreeBSD 9.1R と CentOS 6.3 で動作を確認しています。
 
+### デモを見る!
+
+[こちら](http://lab-sakura.richlab.org/ZIP2ADDR/public_html/)でどうぞ。
+さくらのクラウドいいね!(*^ーﾟ)b
+
 ## 注目すべきこと
 
 ### その１．速さ
