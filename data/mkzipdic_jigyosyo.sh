@@ -2,9 +2,9 @@
 
 #####################################################################
 #
-# MKZIPDIC.SH
+# MKZIPDIC_JIGYOSYO.SH
 # 日本郵便公式の郵便番号住所CSVから、本システム用の辞書を作成
-# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/04
+# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/17
 #
 # Usage : mkzipdic.sh -f
 #         -f ... ・サイトにあるCSVファイルのタイプスタンプが、
@@ -25,8 +25,8 @@
 
 # --- 変数定義 -------------------------------------------------------
 dir_MINE="$(d=${0%/*}/; [ "_$d" = "_$0/" ] && d='./'; cd "$d"; pwd)" # このshのパス
-readonly file_ZIPDIC="$dir_MINE/zipdic.txt"                          # 郵便番号辞書ファイルのパス
-readonly url_ZIPCSVZIP=http://www.post.japanpost.jp/zipcode/dl/oogaki/zip/ken_all.zip
+readonly file_ZIPDIC="$dir_MINE/jigyosyo.txt"                        # 郵便番号辞書ファイルのパス
+readonly url_ZIPCSVZIP=http://www.post.japanpost.jp/zipcode/dl/jigyosyo/zip/jigyosyo.zip
                                                                      # 日本郵便 郵便番号-住所 CSVデータ (Zip形式) URL
 readonly flg_SUEXECMODE=0                                            # サーバーがsuEXECモードで動いているなら1
 
@@ -65,7 +65,7 @@ flg_FORCE=0
 [ \( $# -gt 0 \) -a \( "_$1" = '_-f' \) ] && flg_FORCE=1
 
 # --- cURLコマンド存在チェック ---------------------------------------
-which curl 2>/dev/null
+which curl >/dev/null
 [ $? -eq 0 ] || error_exit 3 'curl command not found'
 
 # --- サイト上のファイルのタイムスタンプを取得 -----------------------
@@ -114,9 +114,9 @@ curl -s $url_ZIPCSVZIP > $tmpf_zipcsvzip
 # --- 郵便番号辞書ファイル作成 ---------------------------------------
 unzip -p $tmpf_zipcsvzip                                          |
 # 日本郵便 郵便番号-住所 CSVデータ(Shift_JIS)                     #
-if   which iconv 2>/dev/null; then                                #
-  iconv -f SHIFT_JIS -t UTF-8                                     #
-elif which nkf   2>/dev/null; then                                #
+if   which iconv >/dev/null; then                                 #
+  iconv -c -f SHIFT_JIS -t UTF-8                                  #
+elif which nkf   >/dev/null; then                                 #
   nkf -Sw80                                                       #
 else                                                              #
   error_exit 6 'No KANJI convertors found (iconv or nkf)'         #
@@ -124,16 +124,17 @@ fi                                                                |
 # 日本郵便 郵便番号-住所 CSVデータ(UTF-8変換済)                   #
 $dir_MINE/../commands/parsrc.sh                                   | # CSVパーサー(自作コマンド)
 # 1:行番号 2:列番号 3:CSVデータセルデータ                         #
-awk '$2~/^3|7|8|9$/'                                              |
-# 1:行番号 2:列番号(3=郵便番号,7=都道府県,8=市区町村,9=町) 3:データ
+awk '$2~/^8|4|5|6|7$/'                                            |
+# 1:行番号 2:列番号(8=郵便番号,4=都道府県,5=市区町村,6-7=町) 3:データ
 awk 'BEGIN{z="#"; p="generated"; c="at"; t="'$timestamp_web'"; }  #
      $1!=line      {pl();z="";p="";c="";t="";line=$1;          }  #
-     $2==3         {z=$3;                                      }  #
-     $2==7         {p=$3;                                      }  #
-     $2==8         {c=$3;                                      }  #
-     $2==9         {t=$3;                                      }  #
+     $2==8         {z=$3;                                      }  #
+     $2==4         {p=$3;                                      }  #
+     $2==5         {c=$3;                                      }  #
+     $2==6         {t=$3;                                      }  #
+     $2==7         {t2=$3;                                     }  #
      END           {pl();                                      }  #
-     function pl() {print z,p,c,t;                             }' > $tmpf_zipdic
+     function pl() {print z,p,c,t t2;                          }' > $tmpf_zipdic
 # 1:郵便番号 2:都道府県名 3:市区町村名 4:町名
 [ -s $tmpf_zipdic ] || error_exit 7 'Failed to make the zipcode dictionary file'
 mv $tmpf_zipdic "$file_ZIPDIC"

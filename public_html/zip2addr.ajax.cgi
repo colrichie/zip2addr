@@ -4,7 +4,7 @@
 #
 # ZIP2ADDR.AJAX.CGI
 # 郵便番号―住所検索
-# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/04
+# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/17
 #
 # [入力]
 # ・[CGI変数]
@@ -24,7 +24,8 @@
 
 # --- 変数定義 -------------------------------------------------------
 dir_MINE="$(d=${0%/*}/; [ "_$d" = "_$0/" ] && d='./'; cd "$d"; pwd)" # このshのパス
-readonly file_ZIPDIC="$dir_MINE/../data/zipdic.txt"                  # 郵便番号辞書ファイルのパス
+readonly file_ZIPDIC_KENALL="$dir_MINE/../data/ken_all.txt"          # 郵便番号辞書(地域名)ファイルのパス
+readonly file_ZIPDIC_JIGYOSYO="$dir_MINE/../data/jigyosyo.txt"       # 郵便番号辞書(事業所名)ファイルのパス
 
 # --- ファイルパス ---------------------------------------------------
 PATH='/usr/local/bin:/usr/bin:/bin'
@@ -57,7 +58,8 @@ __HTTP_HEADER
 ######################################################################
 
 # --- 郵便番号データファイルはあるか？ -------------------------------
-[ -f "$file_ZIPDIC" ] || error500_exit 'zipcode dictionary file not found'
+[ -f "$file_ZIPDIC_KENALL"   ] || error500_exit 'zipcode dictionary #1 file not found'
+[ -f "$file_ZIPDIC_JIGYOSYO" ] || error500_exit 'zipcode dictionary #2 file not found'
 
 # --- CGI変数(GETメソッド)で指定された郵便番号を取得 -----------------
 zipcode=$(echo "_${QUERY_STRING:-}" | # 環境変数で渡ってきたCGI変数文字列をSTDOUTへ
@@ -71,7 +73,7 @@ zipcode=$(echo "_${QUERY_STRING:-}" | # 環境変数で渡ってきたCGI変数�
 [ -n "$zipcode" ] || error400_exit 'invalid zipcode'
 
 # --- JSON形式文字列を生成して返す -----------------------------------
-cat "$file_ZIPDIC"                                                 | # 検索対象の辞書ファイルを開く
+cat "$file_ZIPDIC_KENALL" "$file_ZIPDIC_JIGYOSYO"                  | # 検索対象の辞書ファイルを開く
 #  1:郵便番号 2～:各種住所データ                                   #
 awk '$1=="'$zipcode'"{hit=1;print;exit} END{if(hit==0){print ""}}' | # 郵便番号の該当行を取り出す(1行のみ)
 sed 's/（.*//'                                                     | # 住所文字列で小括弧以降は使えないので除去する
