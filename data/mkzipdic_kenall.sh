@@ -3,8 +3,8 @@
 #####################################################################
 #
 # MKZIPDIC_KENALL.SH
-# 日本郵便公式の郵便番号住所CSVから、本システム用の辞書を作成
-# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/17
+# 日本郵便公式の郵便番号住所CSVから、本システム用の辞書を作成（地域名）
+# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/18
 #
 # Usage : mkzipdic.sh -f
 #         -f ... ・サイトにあるCSVファイルのタイプスタンプが、
@@ -133,7 +133,9 @@ awk 'BEGIN{z="#"; p="generated"; c="at"; t="'$timestamp_web'"; }  #
      $2==8         {c=$3;                                      }  #
      $2==9         {t=$3;                                      }  #
      END           {pl();                                      }  #
-     function pl() {print z,p,c,t;                             }' > $tmpf_zipdic
+     function pl() {print z,p,c,t;                             }' |
+sed 's/（.*//'                                                    | # 地域名住所文字列で小括弧以降は使えないので除去する
+sed 's/以下に.*//'                                                > $tmpf_zipdic # 「以下に」の場合も同様
 # 1:郵便番号 2:都道府県名 3:市区町村名 4:町名
 [ -s $tmpf_zipdic ] || error_exit 7 'Failed to make the zipcode dictionary file'
 mv $tmpf_zipdic "$file_ZIPDIC"

@@ -4,7 +4,7 @@
 #
 # ZIP2ADDR.AJAX.CGI
 # 郵便番号―住所検索
-# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/17
+# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/18
 #
 # [入力]
 # ・[CGI変数]
@@ -76,8 +76,6 @@ zipcode=$(echo "_${QUERY_STRING:-}" | # 環境変数で渡ってきたCGI変数�
 cat "$file_ZIPDIC_KENALL" "$file_ZIPDIC_JIGYOSYO"                  | # 検索対象の辞書ファイルを開く
 #  1:郵便番号 2～:各種住所データ                                   #
 awk '$1=="'$zipcode'"{hit=1;print;exit} END{if(hit==0){print ""}}' | # 郵便番号の該当行を取り出す(1行のみ)
-sed 's/（.*//'                                                     | # 住所文字列で小括弧以降は使えないので除去する
-sed 's/以下に.*//'                                                 | # 「以下に」の場合も同様
 while read zip pref city town; do # HTTPヘッダーと共に、JSON文字列化した住所データを出力する
   cat <<-__HTTP_RESPONSE
 	Content-Type: application/json; charset=utf-8
