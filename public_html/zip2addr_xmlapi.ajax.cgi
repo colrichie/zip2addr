@@ -24,7 +24,7 @@
 
 # --- 変数定義 -------------------------------------------------------
 dir_MINE="$(d=${0%/*}/; [ "_$d" = "_$0/" ] && d='./'; cd "$d"; pwd)" # このshのパス
-readonly url_ZIPAPI='http://api.postalcode.jp/v1/zipsearch'          # 郵便番号辞書APIのURL(グルーブテクノロジー)
+readonly url_ZIPAPI='http://zip.cgis.biz/xml/zip.php'                # 郵便番号辞書APIのURL(zip.cgis.biz)
 
 # --- ファイルパス ---------------------------------------------------
 PATH='/usr/local/bin:/usr/bin:/bin'
@@ -68,13 +68,13 @@ zipcode=$(echo "_${QUERY_STRING:-}" | # 環境変数で渡ってきたCGI変数�
 [ -n "$zipcode" ] || error400_exit 'invalid zipcode'
 
 # --- JSON形式文字列を生成して返す -----------------------------------
-curl -s "${url_ZIPAPI}?format=xml&oe=UTF-8&zipcode=${zipcode}" | # Web APIから住所を検索し、結果をXMLで取得
+curl -s "${url_ZIPAPI}?zn=${zipcode}"                          | # Web APIから住所を検索し、結果をXMLで取得
 tr -d '\r'                                                     | # CR+LFをLFに変換
-$dir_MINE/../commands/parsrx.sh                                | # XMLを絶対XPath形式に正規化(自作プログラム)
-awk '$1~/\/zipcode$/    {z = $2;}                              # # XML中の郵便番号データを抽出
-     $1~/\/prefecture$/ {p = $2;}                              # # XML中の都道府県名データを抽出
-     $1~/\/city$/       {c = $2;}                              # # XML中の市区町村名データを抽出
-     $1~/\/town$/       {t = $2;}                              # # XML中の町名データを抽出
+parsrx.sh                                                      | # XMLを絶対XPath形式に正規化(自作プログラム)
+awk '$1~/@result_zip_num$/ {z = $2;}                           # # XML中の郵便番号データを抽出
+     $1~/@state$/          {p = $2;}                           # # XML中の都道府県名データを抽出
+     $1~/@city$/           {c = $2;}                           # # XML中の市区町村名データを抽出
+     $1~/@address$/        {t = $2;}                           # # XML中の町名データを抽出
      END                {print z,p,c,t;}'                      | # 次コマンドに出力
 awk '{print (NF==4) ? $0 : "";}'                               | # 住所が見つからなければ空行を出力する
 while read zip pref city town; do                                # HTTPヘッダーと共に、JSON文字列化した住所データを出力する
