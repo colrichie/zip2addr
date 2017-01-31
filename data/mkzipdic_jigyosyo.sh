@@ -1,10 +1,10 @@
-#! /bin/sh
+#!/bin/sh
 
 #####################################################################
 #
 # MKZIPDIC_JIGYOSYO.SH
 # 日本郵便公式の郵便番号住所CSVから、本システム用の辞書を作成（事業所名）
-# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/18
+# Written by Rich Mikan(richmikan[at]richlab.org) at 2017/01/31
 #
 # Usage : mkzipdic.sh -f
 #         -f ... ・サイトにあるCSVファイルのタイプスタンプが、
@@ -31,7 +31,7 @@ readonly url_ZIPCSVZIP=http://www.post.japanpost.jp/zipcode/dl/jigyosyo/zip/jigy
 readonly flg_SUEXECMODE=0                                            # サーバーがsuEXECモードで動いているなら1
 
 # --- ファイルパス ---------------------------------------------------
-PATH='/usr/local/tukubai/bin:/usr/local/bin:/usr/bin:/bin'
+PATH="$(command -p getconf PATH):${PATH:-}"
 
 # --- 終了関数定義(終了前に一時ファイル削除) -------------------------
 exit_trap() {
