@@ -1,10 +1,10 @@
-#! /bin/sh
+#!/bin/sh
 
 ######################################################################
 #
 # ZIP2ADDR.AJAX.CGI
 # 郵便番号―住所検索
-# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/18
+# Written by Rich Mikan(richmikan[at]richlab.org) at 2017/01/31
 #
 # [入力]
 # ・[CGI変数]
@@ -28,7 +28,7 @@ readonly file_ZIPDIC_KENALL="$dir_MINE/../data/ken_all.txt"          # 郵便番
 readonly file_ZIPDIC_JIGYOSYO="$dir_MINE/../data/jigyosyo.txt"       # 郵便番号辞書(事業所名)ファイルのパス
 
 # --- ファイルパス ---------------------------------------------------
-PATH='/usr/local/bin:/usr/bin:/bin'
+PATH="$(command -p getconf PATH):${PATH:-}"
 
 # --- エラー終了関数定義 ---------------------------------------------
 error500_exit() {
