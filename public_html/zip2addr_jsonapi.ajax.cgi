@@ -4,7 +4,7 @@
 #
 # ZIP2ADDR_JSONAPI.AJAX.CGI
 # 郵便番号―住所検索(よそのJSON形式Web API利用バージョン)
-# Written by Rich Mikan(richmikan[at]richlab.org) at 2014/01/10
+# Written by Rich Mikan(richmikan[at]richlab.org) at 2017/01/31
 #
 # [入力]
 # ・[CGI変数]
